@@ -33,24 +33,34 @@
     var currentPeriod = null;
 
     // --- DOM Elements ---
-    var elApp = document.getElementById('app');
-    var elGreeting = document.getElementById('time-greeting');
-    var elClock = document.getElementById('clock');
-    var elTodoList = document.getElementById('todo-list');
-    var elSettingsBtn = document.getElementById('settings-btn');
-    var elSettingsModal = document.getElementById('settings-modal');
-    var elCloseSettingsBtn = document.getElementById('close-settings-btn');
-    var elResetDataBtn = document.getElementById('reset-data-btn');
+    var elApp, elGreeting, elClock, elTodoList, elSettingsBtn, elSettingsModal, elCloseSettingsBtn, elResetDataBtn;
 
     // --- Initialization ---
     function init() {
+        console.log('Initializing app...');
+
+        elApp = document.getElementById('app');
+        elGreeting = document.getElementById('time-greeting');
+        elClock = document.getElementById('clock');
+        elTodoList = document.getElementById('todo-list');
+        elSettingsBtn = document.getElementById('settings-btn');
+        elSettingsModal = document.getElementById('settings-modal');
+        elCloseSettingsBtn = document.getElementById('close-settings-btn');
+        elResetDataBtn = document.getElementById('reset-data-btn');
+
+        if (!elSettingsBtn) {
+            console.error('Settings button not found!');
+        } else {
+            console.log('Settings button found, attaching listener');
+            elSettingsBtn.addEventListener('click', openSettings);
+        }
+
+        if (elCloseSettingsBtn) elCloseSettingsBtn.addEventListener('click', closeSettings);
+        if (elResetDataBtn) elResetDataBtn.addEventListener('click', resetData);
+
         updateTime();
         setInterval(updateTime, 1000); // Update every second
         renderSettings();
-
-        elSettingsBtn.addEventListener('click', openSettings);
-        elCloseSettingsBtn.addEventListener('click', closeSettings);
-        elResetDataBtn.addEventListener('click', resetData);
 
         // Expose app for inline onclick handlers (ES5 safe way)
         window.app = {
@@ -58,6 +68,8 @@
             deleteTodo: deleteTodo,
             toggleTodo: toggleTodo
         };
+
+        console.log('App initialized');
     }
 
     // --- Core Logic ---
@@ -352,6 +364,10 @@
     }
 
     // Start
-    init();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 
 })();
