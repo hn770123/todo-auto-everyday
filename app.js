@@ -144,7 +144,8 @@
         var now = new Date();
         var hours = String(now.getHours()).padStart(2, '0');
         var minutes = String(now.getMinutes()).padStart(2, '0');
-        elClock.textContent = hours + ':' + minutes;
+        var seconds = String(now.getSeconds()).padStart(2, '0');
+        elClock.textContent = hours + ':' + minutes + ':' + seconds;
 
         var newPeriod = getPeriod(now);
         if (newPeriod !== currentPeriod) {
