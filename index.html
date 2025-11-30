@@ -14,7 +14,7 @@
     <div id="app">
         <header class="header">
             <h1 id="time-greeting">Good Morning</h1>
-            <button id="settings-btn" class="icon-btn" aria-label="Settings">⚙️</button>
+            <button id="settings-btn" class="icon-btn" aria-label="Settings" onclick="app.openSettings()">⚙️</button>
         </header>
 
         <div class="current-time-display" id="clock">00:00:00</div>
@@ -31,7 +31,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>設定</h2>
-                <button id="close-settings-btn" class="close-btn">&times;</button>
+                <button id="close-settings-btn" class="close-btn" onclick="app.closeSettings()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="settings-section">
@@ -61,7 +61,7 @@
 
                 <div class="settings-section">
                     <h3>データ管理</h3>
-                    <button id="reset-data-btn" class="danger-btn">データをリセット</button>
+                    <button id="reset-data-btn" class="danger-btn" onclick="app.resetData()">データをリセット</button>
                 </div>
             </div>
         </div>
