@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Everyday Todo</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1 id="time-greeting">Good Morning</h1>
+            <button id="settings-btn" class="icon-btn" aria-label="Settings">⚙️</button>
+        </header>
+
+        <div class="current-time-display" id="clock">00:00</div>
+
+        <main id="todo-list" class="todo-list">
+            <!-- Todo items will be injected here -->
+        </main>
+
+        <div id="confetti-container"></div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>設定</h2>
+                <button id="close-settings-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>朝のTodo (04:00 - 12:00)</h3>
+                    <ul id="settings-morning-list" class="settings-list"></ul>
+                    <div class="add-todo-form">
+                        <input type="text" id="new-morning-todo" placeholder="新しいタスクを追加">
+                        <button onclick="app.addTodo('morning')">＋</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>帰宅後のTodo (12:00 - 19:00)</h3>
+                    <ul id="settings-afterschool-list" class="settings-list"></ul>
+                    <div class="add-todo-form">
+                        <input type="text" id="new-afterschool-todo" placeholder="新しいタスクを追加">
+                        <button onclick="app.addTodo('afterSchool')">＋</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>寝る前のTodo (19:00 - 04:00)</h3>
+                    <ul id="settings-night-list" class="settings-list"></ul>
+                    <div class="add-todo-form">
+                        <input type="text" id="new-night-todo" placeholder="新しいタスクを追加">
+                        <button onclick="app.addTodo('night')">＋</button>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>データ管理</h3>
+                    <button id="reset-data-btn" class="danger-btn">データをリセット</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
