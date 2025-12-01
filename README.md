@@ -63,8 +63,22 @@
 - **HTML5**: セマンティックマークアップ
 - **CSS3**: 文房具風カスタムデザイン
 - **Vanilla JavaScript**: フレームワーク不使用
+- **ES5+ Polyfills**: iOS 9対応のためpolyfills.jsを使用
 - **Local Storage**: クライアントサイドデータ保存
 - **Discord Webhook API**: 通知機能
+
+### iOS 9対応
+
+iOS 9.3.5などの古いブラウザでも動作するように、以下のpolyfillsを実装しています：
+
+- **String.prototype.padStart** (ES2017)
+- **String.prototype.repeat** (ES2015)
+- **Array.prototype.find** (ES2015)
+- **Array.prototype.findIndex** (ES2015)
+- **Array.prototype.includes** (ES2016)
+- **Array.from** (ES2015)
+
+これにより、iOS 9以降のすべてのデバイスで正常に動作します。
 
 ## 📱 ブラウザ対応
 
@@ -90,6 +104,7 @@
 ├── todo.css        # Todoページスタイル
 ├── log.css         # ログページスタイル
 ├── config.css      # 設定ページスタイル
+├── polyfills.js    # iOS 9対応polyfills
 ├── utils.js        # 共通ユーティリティ
 ├── todo.js         # Todoページロジック
 ├── log.js          # ログページロジック
