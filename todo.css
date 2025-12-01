@@ -1,0 +1,209 @@
+/* Todo ページ専用スタイル */
+
+.period-info {
+    text-align: center;
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-sm);
+    background: linear-gradient(to right, transparent, rgba(74, 144, 226, 0.1), transparent);
+    border-radius: 8px;
+    margin-left: 60px;
+}
+
+.period-label {
+    font-size: 0.9rem;
+    color: var(--ink-gray);
+    margin-right: var(--spacing-xs);
+}
+
+.period-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+.todo-container {
+    margin-left: 60px;
+}
+
+.todo-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.section-title {
+    font-size: 1.3rem;
+    color: var(--ink-black);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px dashed var(--ink-light);
+}
+
+.todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.todo-item {
+    background: white;
+    border: 2px solid var(--ink-light);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    cursor: move;
+    transition: all 0.2s ease;
+    box-shadow: 2px 2px 0 var(--shadow-light);
+    position: relative;
+}
+
+.todo-item:hover {
+    transform: translateX(4px);
+    box-shadow: 4px 4px 0 var(--shadow-medium);
+    border-color: var(--accent-blue);
+}
+
+.todo-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.todo-item.drag-over {
+    border-color: var(--accent-green);
+    background: rgba(106, 176, 76, 0.1);
+}
+
+/* チェックボックス */
+.todo-checkbox {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border: 3px solid var(--ink-black);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.todo-checkbox:hover {
+    border-color: var(--accent-blue);
+    background: rgba(74, 144, 226, 0.1);
+}
+
+.todo-item.checked .todo-checkbox {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.todo-item.checked .todo-checkbox::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* ドラッグハンドル */
+.todo-drag-handle {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    cursor: move;
+    color: var(--ink-light);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.todo-drag-handle::before {
+    content: '⋮⋮';
+    letter-spacing: -4px;
+}
+
+/* Todoテキスト */
+.todo-text {
+    flex: 1;
+    font-size: 1.1rem;
+    color: var(--ink-black);
+    line-height: 1.5;
+}
+
+.todo-item.checked .todo-text {
+    color: var(--ink-gray);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* 空メッセージ */
+.empty-message {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--ink-gray);
+    font-size: 1.1rem;
+}
+
+.empty-message p {
+    margin: 0;
+}
+
+/* アニメーション */
+@keyframes checkBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.todo-item.just-checked {
+    animation: checkBounce 0.3s ease;
+}
+
+/* 時間帯別の色分け */
+body[data-period="morning"] .period-value {
+    color: #f5d76e;
+}
+
+body[data-period="afterSchool"] .period-value {
+    color: #4a90e2;
+}
+
+body[data-period="night"] .period-value {
+    color: #9b59b6;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .todo-container {
+        margin-left: 40px;
+    }
+
+    .period-info {
+        margin-left: 40px;
+    }
+
+    .todo-item {
+        padding: var(--spacing-sm);
+    }
+
+    .todo-text {
+        font-size: 1rem;
+    }
+
+    .todo-drag-handle {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        font-size: 1rem;
+    }
+}

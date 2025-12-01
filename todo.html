@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Todo - Everyday Todo</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="todo.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="paper-container">
+        <header class="header">
+            <h1>📝 Todo リスト</h1>
+            <p class="subtitle" id="greeting">おはようございます</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <a href="todo.html" class="nav-tab active">📝 Todo</a>
+            <a href="log.html" class="nav-tab">📊 ログ</a>
+            <a href="config.html" class="nav-tab">⚙️ 設定</a>
+        </nav>
+
+        <div class="clock-display" id="clock">00:00:00</div>
+
+        <div class="period-info" id="period-info">
+            <span class="period-label">現在の時間帯:</span>
+            <span class="period-value" id="current-period">朝</span>
+        </div>
+
+        <div class="todo-container">
+            <!-- 未完了のTodo -->
+            <div class="todo-section">
+                <h3 class="section-title">📌 未完了</h3>
+                <div id="todo-list-unchecked" class="todo-list">
+                    <!-- Todoアイテムが動的に追加されます -->
+                </div>
+                <div id="empty-message" class="empty-message hidden">
+                    <p>✨ すべてのタスクが完了しました！</p>
+                </div>
+            </div>
+
+            <!-- 完了済みのTodo -->
+            <div class="todo-section">
+                <h3 class="section-title">✅ 完了済み</h3>
+                <div id="todo-list-checked" class="todo-list">
+                    <!-- 完了済みTodoアイテムが動的に追加されます -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="init.js"></script>
+    <script src="utils.js"></script>
+    <script src="todo.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>設定 - Everyday Todo</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="config.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="paper-container">
+        <header class="header">
+            <h1>⚙️ 設定</h1>
+            <p class="subtitle">Todoとアプリの設定</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <a href="todo.html" class="nav-tab">📝 Todo</a>
+            <a href="log.html" class="nav-tab">📊 ログ</a>
+            <a href="config.html" class="nav-tab active">⚙️ 設定</a>
+        </nav>
+
+        <div class="config-container">
+            <!-- Discord設定 -->
+            <section class="config-section">
+                <h2 class="config-section-title">🔔 Discord通知設定</h2>
+                <div class="config-group">
+                    <label for="discord-webhook-url" class="config-label">
+                        Webhook URL
+                        <span class="config-help">DiscordのチャンネルのWebhook URLを入力</span>
+                    </label>
+                    <input type="url" id="discord-webhook-url" class="input"
+                        placeholder="https://discord.com/api/webhooks/...">
+                </div>
+                <div class="config-group">
+                    <label for="discord-username" class="config-label">
+                        投稿者名
+                        <span class="config-help">Discordに表示される名前</span>
+                    </label>
+                    <input type="text" id="discord-username" class="input" placeholder="Todo Bot">
+                </div>
+                <div class="config-actions">
+                    <button class="btn btn-primary" id="save-discord-btn">💾 Discord設定を保存</button>
+                    <button class="btn" id="test-discord-btn">🧪 テスト送信</button>
+                </div>
+            </section>
+
+            <!-- Todo管理 -->
+            <section class="config-section">
+                <h2 class="config-section-title">📝 Todo管理</h2>
+
+                <!-- 朝のTodo -->
+                <div class="todo-period-section">
+                    <h3 class="period-title">🌅 朝のTodo (04:00 - 12:00)</h3>
+                    <ul id="morning-todo-list" class="todo-config-list">
+                        <!-- Todoアイテムが動的に追加されます -->
+                    </ul>
+                    <div class="add-todo-form">
+                        <input type="text" id="new-morning-todo" class="input" placeholder="新しいタスクを入力...">
+                        <button class="btn btn-success" id="add-morning-btn">＋ 追加</button>
+                    </div>
+                </div>
+
+                <!-- 帰宅後のTodo -->
+                <div class="todo-period-section">
+                    <h3 class="period-title">🏠 帰宅後のTodo (12:00 - 19:00)</h3>
+                    <ul id="afterSchool-todo-list" class="todo-config-list">
+                        <!-- Todoアイテムが動的に追加されます -->
+                    </ul>
+                    <div class="add-todo-form">
+                        <input type="text" id="new-afterSchool-todo" class="input" placeholder="新しいタスクを入力...">
+                        <button class="btn btn-success" id="add-afterSchool-btn">＋ 追加</button>
+                    </div>
+                </div>
+
+                <!-- 寝る前のTodo -->
+                <div class="todo-period-section">
+                    <h3 class="period-title">🌙 寝る前のTodo (19:00 - 04:00)</h3>
+                    <ul id="night-todo-list" class="todo-config-list">
+                        <!-- Todoアイテムが動的に追加されます -->
+                    </ul>
+                    <div class="add-todo-form">
+                        <input type="text" id="new-night-todo" class="input" placeholder="新しいタスクを入力...">
+                        <button class="btn btn-success" id="add-night-btn">＋ 追加</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- データ管理 -->
+            <section class="config-section">
+                <h2 class="config-section-title">🗄️ データ管理</h2>
+                <div class="config-actions">
+                    <button class="btn btn-danger" id="reset-all-btn">🔄 すべてのデータをリセット</button>
+                </div>
+                <p class="config-warning">
+                    ⚠️ リセットすると、すべてのTodo、ログ、設定が削除されます。この操作は取り消せません。
+                </p>
+            </section>
+        </div>
+    </div>
+
+    <!-- 曜日選択モーダル -->
+    <div id="weekday-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">曜日設定</h3>
+                <button class="modal-close" id="close-modal-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">このTodoを表示する曜日を選択してください</p>
+                <div class="weekday-selector">
+                    <label class="weekday-option">
+                        <input type="checkbox" value="0" class="weekday-checkbox">
+                        <span class="weekday-label">日</span>
+                    </label>
+                    <label class="weekday-option">
+                        <input type="checkbox" value="1" class="weekday-checkbox">
+                        <span class="weekday-label">月</span>
+                    </label>
+                    <label class="weekday-option">
+                        <input type="checkbox" value="2" class="weekday-checkbox">
+                        <span class="weekday-label">火</span>
+                    </label>
+                    <label class="weekday-option">
+                        <input type="checkbox" value="3" class="weekday-checkbox">
+                        <span class="weekday-label">水</span>
+                    </label>
+                    <label class="weekday-option">
+                        <input type="checkbox" value="4" class="weekday-checkbox">
+                        <span class="weekday-label">木</span>
+                    </label>
+                    <label class="weekday-option">
+                        <input type="checkbox" value="5" class="weekday-checkbox">
+                        <span class="weekday-label">金</span>
+                    </label>
+                    <label class="weekday-option">
+                        <input type="checkbox" value="6" class="weekday-checkbox">
+                        <span class="weekday-label">土</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-weekday-btn">キャンセル</button>
+                <button class="btn btn-primary" id="save-weekday-btn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="config.js"></script>
+</body>
+
+</html>

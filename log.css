@@ -1,0 +1,161 @@
+/* ログページ専用スタイル */
+
+.log-controls {
+    margin: var(--spacing-md) 0;
+    text-align: right;
+    margin-left: 60px;
+}
+
+.log-container {
+    margin-left: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.log-item {
+    background: white;
+    border: 2px solid var(--ink-light);
+    border-left: 6px solid var(--accent-blue);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+    transition: all 0.2s ease;
+    box-shadow: 2px 2px 0 var(--shadow-light);
+}
+
+.log-item:hover {
+    transform: translateX(4px);
+    box-shadow: 4px 4px 0 var(--shadow-medium);
+}
+
+.log-item.action-check {
+    border-left-color: var(--accent-green);
+}
+
+.log-item.action-uncheck {
+    border-left-color: var(--accent-red);
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+    gap: var(--spacing-sm);
+}
+
+.log-action {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.log-item.action-check .log-action {
+    color: var(--accent-green);
+}
+
+.log-item.action-uncheck .log-action {
+    color: var(--accent-red);
+}
+
+.log-action-icon {
+    font-size: 1.2rem;
+}
+
+.log-timestamp {
+    font-size: 0.85rem;
+    color: var(--ink-gray);
+    white-space: nowrap;
+}
+
+.log-period {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: var(--spacing-xs);
+}
+
+.log-period.period-morning {
+    background: rgba(245, 215, 110, 0.3);
+    color: #b8941e;
+}
+
+.log-period.period-afterSchool {
+    background: rgba(74, 144, 226, 0.3);
+    color: #2e5d99;
+}
+
+.log-period.period-night {
+    background: rgba(155, 89, 182, 0.3);
+    color: #6c3a7c;
+}
+
+.log-text {
+    font-size: 1rem;
+    color: var(--ink-black);
+    line-height: 1.5;
+    padding-left: var(--spacing-md);
+}
+
+.empty-message {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--ink-gray);
+}
+
+.empty-message p {
+    margin: var(--spacing-sm) 0;
+    font-size: 1.1rem;
+}
+
+.empty-sub {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* アニメーション */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.log-item {
+    animation: slideIn 0.3s ease;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .log-controls {
+        margin-left: 40px;
+    }
+
+    .log-container {
+        margin-left: 40px;
+    }
+
+    .log-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .log-timestamp {
+        white-space: normal;
+        font-size: 0.8rem;
+    }
+
+    .log-text {
+        padding-left: 0;
+        margin-top: var(--spacing-xs);
+    }
+}

@@ -4,70 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Everyday Todo</title>
-    <link rel="stylesheet" href="style.css?v=3">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Klee One', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 100%);
+        }
+
+        .redirect-message {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .redirect-message h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+        }
+
+        .redirect-message p {
+            font-size: 1rem;
+            color: #5a5a5a;
+        }
+    </style>
+    <script>
+        // すぐにtodo.htmlにリダイレクト
+        window.location.href = 'todo.html';
+    </script>
 </head>
 
 <body>
-    <div id="app">
-        <header class="header">
-            <h1 id="time-greeting">Good Morning</h1>
-            <button id="settings-btn" class="icon-btn" aria-label="Settings" onclick="app.openSettings()">⚙️</button>
-        </header>
-
-        <div class="current-time-display" id="clock">00:00:00</div>
-
-        <main id="todo-list" class="todo-list">
-            <!-- Todo items will be injected here -->
-        </main>
-
-        <div id="confetti-container"></div>
+    <div class="redirect-message">
+        <h1>📝 Everyday Todo</h1>
+        <p>リダイレクト中...</p>
     </div>
-
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>設定</h2>
-                <button id="close-settings-btn" class="close-btn" onclick="app.closeSettings()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="settings-section">
-                    <h3>朝のTodo (04:00 - 12:00)</h3>
-                    <ul id="settings-morning-list" class="settings-list"></ul>
-                    <div class="add-todo-form">
-                        <input type="text" id="new-morning-todo" placeholder="新しいタスクを追加">
-                        <button onclick="app.addTodo('morning')">＋</button>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>帰宅後のTodo (12:00 - 19:00)</h3>
-                    <ul id="settings-afterschool-list" class="settings-list"></ul>
-                    <div class="add-todo-form">
-                        <input type="text" id="new-afterschool-todo" placeholder="新しいタスクを追加">
-                        <button onclick="app.addTodo('afterSchool')">＋</button>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>寝る前のTodo (19:00 - 04:00)</h3>
-                    <ul id="settings-night-list" class="settings-list"></ul>
-                    <div class="add-todo-form">
-                        <input type="text" id="new-night-todo" placeholder="新しいタスクを追加">
-                        <button onclick="app.addTodo('night')">＋</button>
-                    </div>
-                </div>
-
-                <div class="settings-section">
-                    <h3>データ管理</h3>
-                    <button id="reset-data-btn" class="danger-btn" onclick="app.resetData()">データをリセット</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js?v=3"></script>
 </body>
 
 </html>

@@ -1,0 +1,264 @@
+/* 共通スタイル - 文房具風デザイン */
+
+:root {
+    /* カラーパレット */
+    --paper-white: #fdfbf7;
+    --ink-black: #2c2c2c;
+    --ink-gray: #5a5a5a;
+    --ink-light: #8b8b8b;
+    --accent-red: #d64545;
+    --accent-blue: #4a90e2;
+    --accent-yellow: #f5d76e;
+    --accent-green: #6ab04c;
+    
+    /* 紙のテクスチャ */
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
+    --shadow-heavy: rgba(0, 0, 0, 0.15);
+    
+    /* スペーシング */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Klee One', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro', 'Yu Gothic Medium', '游ゴシック Medium', 'Meiryo', 'メイリオ', serif;
+    background: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 100%);
+    color: var(--ink-black);
+    min-height: 100vh;
+    padding: var(--spacing-md);
+    line-height: 1.6;
+    /* 紙のテクスチャ効果 */
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 0.02 0"/></filter><rect width="300" height="300" filter="url(%23noise)"/></svg>');
+}
+
+/* 紙風コンテナ */
+.paper-container {
+    background: var(--paper-white);
+    border-radius: 3px;
+    padding: var(--spacing-lg);
+    margin: 0 auto;
+    max-width: 800px;
+    box-shadow: 
+        0 2px 4px var(--shadow-light),
+        0 8px 16px var(--shadow-medium);
+    position: relative;
+    /* 紙の質感 */
+    background-image: 
+        linear-gradient(90deg, transparent 79px, #d4b5a0 79px, #d4b5a0 81px, transparent 81px),
+        repeating-linear-gradient(transparent, transparent 2rem, rgba(200, 180, 160, 0.1) 2rem, rgba(200, 180, 160, 0.1) calc(2rem + 1px));
+    background-size: 100% 100%;
+}
+
+/* 穴あき効果（ノート風） */
+.paper-container::before {
+    content: '';
+    position: absolute;
+    left: 25px;
+    top: 50px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #e8d5c4;
+    box-shadow: 
+        0 60px 0 #e8d5c4,
+        0 120px 0 #e8d5c4,
+        0 180px 0 #e8d5c4,
+        0 240px 0 #e8d5c4;
+}
+
+/* ヘッダー */
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
+    border-bottom: 2px solid var(--accent-blue);
+    position: relative;
+    margin-left: 60px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: var(--ink-black);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    text-shadow: 2px 2px 0 rgba(74, 144, 226, 0.1);
+}
+
+.header .subtitle {
+    font-size: 0.9rem;
+    color: var(--ink-gray);
+    font-weight: 400;
+}
+
+/* ナビゲーション */
+.nav-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    margin-left: 60px;
+    flex-wrap: wrap;
+}
+
+.nav-tab {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(to bottom, #fff9f0, #fef6ec);
+    border: 2px solid var(--accent-yellow);
+    border-radius: 8px 8px 0 0;
+    text-decoration: none;
+    color: var(--ink-black);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 -2px 4px var(--shadow-light);
+    position: relative;
+}
+
+.nav-tab:hover {
+    background: linear-gradient(to bottom, #ffffff, #fff9f0);
+    transform: translateY(-2px);
+    box-shadow: 0 -4px 8px var(--shadow-medium);
+}
+
+.nav-tab.active {
+    background: var(--paper-white);
+    border-bottom-color: var(--paper-white);
+    box-shadow: 
+        -2px 0 4px var(--shadow-light),
+        2px 0 4px var(--shadow-light);
+    transform: translateY(2px);
+}
+
+/* ボタン共通スタイル */
+.btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--ink-black);
+    border-radius: 4px;
+    background: var(--paper-white);
+    color: var(--ink-black);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 3px 3px 0 var(--shadow-medium);
+    font-family: inherit;
+}
+
+.btn:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 var(--shadow-medium);
+}
+
+.btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--shadow-medium);
+}
+
+.btn-primary {
+    background: var(--accent-blue);
+    border-color: #3a7bc8;
+    color: white;
+}
+
+.btn-danger {
+    background: var(--accent-red);
+    border-color: #b83535;
+    color: white;
+}
+
+.btn-success {
+    background: var(--accent-green);
+    border-color: #4a8c3c;
+    color: white;
+}
+
+/* インプット */
+.input {
+    padding: var(--spacing-sm);
+    border: 2px solid var(--ink-light);
+    border-radius: 4px;
+    background: white;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--ink-black);
+    transition: border-color 0.2s ease;
+    width: 100%;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* クロック表示 */
+.clock-display {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin: var(--spacing-md) 0;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 3px 3px 0 rgba(74, 144, 226, 0.1);
+    letter-spacing: 0.1em;
+}
+
+/* ユーティリティ */
+.text-center {
+    text-align: center;
+}
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+.hidden {
+    display: none !important;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-sm);
+    }
+    
+    .paper-container {
+        padding: var(--spacing-md);
+    }
+    
+    .header {
+        margin-left: 40px;
+    }
+    
+    .nav-tabs {
+        margin-left: 40px;
+    }
+    
+    .paper-container::before {
+        left: 15px;
+        width: 10px;
+        height: 10px;
+        top: 30px;
+        box-shadow: 
+            0 40px 0 #e8d5c4,
+            0 80px 0 #e8d5c4,
+            0 120px 0 #e8d5c4;
+    }
+    
+    .clock-display {
+        font-size: 2rem;
+    }
+}
