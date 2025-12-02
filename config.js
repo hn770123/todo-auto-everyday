@@ -110,6 +110,13 @@
         var todos = TodoManager.getTodos(period);
         listElement.innerHTML = '';
 
+        // order順にソート
+        todos.sort(function (a, b) {
+            var orderA = a.order !== undefined ? a.order : 999;
+            var orderB = b.order !== undefined ? b.order : 999;
+            return orderA - orderB;
+        });
+
         if (todos.length === 0) {
             var empty = document.createElement('li');
             empty.style.textAlign = 'center';
@@ -151,7 +158,37 @@
         text.textContent = todo.text;
         text.style.fontWeight = 'bold';
         text.style.fontSize = '1.1rem';
+        text.style.flex = '1';
         header.appendChild(text);
+
+        // 操作ボタングループ
+        var actionGroup = document.createElement('div');
+        actionGroup.style.display = 'flex';
+        actionGroup.style.gap = '0.25rem';
+        actionGroup.style.alignItems = 'center';
+
+        // 並び替えボタン（↑↓）
+        var upBtn = document.createElement('button');
+        upBtn.className = 'icon-btn';
+        upBtn.textContent = '↑';
+        upBtn.title = '上に移動';
+        upBtn.style.fontSize = '1.3rem';
+        upBtn.style.padding = '0.5rem';
+        upBtn.addEventListener('click', function () {
+            handleMoveTodo(period, todo.id, 'up');
+        });
+        actionGroup.appendChild(upBtn);
+
+        var downBtn = document.createElement('button');
+        downBtn.className = 'icon-btn';
+        downBtn.textContent = '↓';
+        downBtn.title = '下に移動';
+        downBtn.style.fontSize = '1.3rem';
+        downBtn.style.padding = '0.5rem';
+        downBtn.addEventListener('click', function () {
+            handleMoveTodo(period, todo.id, 'down');
+        });
+        actionGroup.appendChild(downBtn);
 
         // 削除ボタン
         var deleteBtn = document.createElement('button');
@@ -163,7 +200,9 @@
         deleteBtn.addEventListener('click', function () {
             handleDeleteTodo(period, todo.id);
         });
-        header.appendChild(deleteBtn);
+        actionGroup.appendChild(deleteBtn);
+
+        header.appendChild(actionGroup);
 
         container.appendChild(header);
 
@@ -217,6 +256,43 @@
         li.appendChild(container);
 
         return li;
+    }
+
+    // Todoを上下に移動
+    function handleMoveTodo(period, todoId, direction) {
+        var todos = TodoManager.getTodos(period);
+        var currentIndex = todos.findIndex(function (t) { return t.id === todoId; });
+
+        if (currentIndex === -1) return;
+
+        var targetIndex;
+        if (direction === 'up') {
+            if (currentIndex === 0) return; // 既に一番上
+            targetIndex = currentIndex - 1;
+        } else { // down
+            if (currentIndex === todos.length - 1) return; // 既に一番下
+            targetIndex = currentIndex + 1;
+        }
+
+        // 配列内で入れ替え
+        var temp = todos[currentIndex];
+        todos[currentIndex] = todos[targetIndex];
+        todos[targetIndex] = temp;
+
+        // order値を更新
+        todos.forEach(function (todo, index) {
+            todo.order = index;
+        });
+
+        // 保存
+        TodoManager.reorderTodos(period, todos);
+
+        // 再レンダリング
+        renderTodoList(period,
+            period === 'morning' ? elMorningList :
+                period === 'afterSchool' ? elAfterSchoolList :
+                    elNightList
+        );
     }
 
     // 曜日トグル処理

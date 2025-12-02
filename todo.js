@@ -68,6 +68,13 @@
         var todos = TodoManager.getTodos(currentPeriod);
         var now = new Date();
 
+        // order順にソート
+        todos.sort(function (a, b) {
+            var orderA = a.order !== undefined ? a.order : 999;
+            var orderB = b.order !== undefined ? b.order : 999;
+            return orderA - orderB;
+        });
+
         // 曜日フィルタリング
         var visibleTodos = todos.filter(function (todo) {
             return shouldShowToday(todo);
