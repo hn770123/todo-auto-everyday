@@ -43,8 +43,8 @@
         var now = new Date();
         var hours = String(now.getHours()).padStart(2, '0');
         var minutes = String(now.getMinutes()).padStart(2, '0');
-        var seconds = String(now.getSeconds()).padStart(2, '0');
-        elClock.textContent = hours + ':' + minutes + ':' + seconds;
+        // var seconds = String(now.getSeconds()).padStart(2, '0');
+        elClock.textContent = hours + ':' + minutes;
 
         // 時間帯変更チェック
         var newPeriod = getCurrentPeriod();

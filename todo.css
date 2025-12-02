@@ -6,23 +6,24 @@
     padding: var(--spacing-sm);
     background: linear-gradient(to right, transparent, rgba(74, 144, 226, 0.1), transparent);
     border-radius: 8px;
-    margin-left: 60px;
+    /* margin-left: 60px; 削除 */
 }
 
 .period-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--ink-gray);
     margin-right: var(--spacing-xs);
 }
 
 .period-value {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--accent-blue);
 }
 
 .todo-container {
-    margin-left: 60px;
+    /* margin-left: 60px; 削除 */
+    width: 100%;
 }
 
 .todo-section {
@@ -30,7 +31,7 @@
 }
 
 .section-title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     color: var(--ink-black);
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-xs);
@@ -44,7 +45,8 @@
 }
 
 .todo-item {
-    background: white;
+    background: #2a2a2a;
+    /* ダークモード背景 */
     border: 2px solid var(--ink-light);
     border-radius: 8px;
     padding: var(--spacing-md);
@@ -75,12 +77,14 @@
 
 /* チェックボックス */
 .todo-checkbox {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
+    width: 32px;
+    /* 大きく */
+    height: 32px;
+    min-width: 32px;
     border: 3px solid var(--ink-black);
     border-radius: 6px;
-    background: white;
+    background: #1a1a1a;
+    /* ダーク背景 */
     cursor: pointer;
     position: relative;
     transition: all 0.2s ease;
@@ -103,18 +107,19 @@
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: bold;
 }
 
 /* ドラッグハンドル */
 .todo-drag-handle {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
+    width: 30px;
+    /* 大きく */
+    height: 30px;
+    min-width: 30px;
     cursor: move;
     color: var(--ink-light);
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,9 +134,11 @@
 /* Todoテキスト */
 .todo-text {
     flex: 1;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
+    /* 大きく */
     color: var(--ink-black);
     line-height: 1.5;
+    font-weight: 500;
 }
 
 .todo-item.checked .todo-text {
@@ -145,7 +152,7 @@
     text-align: center;
     padding: var(--spacing-xl);
     color: var(--ink-gray);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 .empty-message p {
@@ -185,11 +192,13 @@ body[data-period="night"] .period-value {
 /* レスポンシブ */
 @media (max-width: 768px) {
     .todo-container {
-        margin-left: 40px;
+        /* margin-left: 40px; 削除 */
+        margin-left: 0;
     }
 
     .period-info {
-        margin-left: 40px;
+        /* margin-left: 40px; 削除 */
+        margin-left: 0;
     }
 
     .todo-item {
@@ -197,13 +206,13 @@ body[data-period="night"] .period-value {
     }
 
     .todo-text {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .todo-drag-handle {
-        width: 20px;
-        height: 20px;
-        min-width: 20px;
-        font-size: 1rem;
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        font-size: 1.2rem;
     }
 }

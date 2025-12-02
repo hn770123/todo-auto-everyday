@@ -13,11 +13,6 @@
     var elNewMorningTodo, elNewAfterSchoolTodo, elNewNightTodo;
     var elAddMorningBtn, elAddAfterSchoolBtn, elAddNightBtn;
     var elResetAllBtn;
-    var elWeekdayModal, elCloseModalBtn, elCancelWeekdayBtn, elSaveWeekdayBtn;
-
-    // 状態
-    var currentEditingTodo = null;
-    var currentEditingPeriod = null;
 
     // 初期化
     function init() {
@@ -43,12 +38,6 @@
         // データ管理
         elResetAllBtn = document.getElementById('reset-all-btn');
 
-        // モーダル
-        elWeekdayModal = document.getElementById('weekday-modal');
-        elCloseModalBtn = document.getElementById('close-modal-btn');
-        elCancelWeekdayBtn = document.getElementById('cancel-weekday-btn');
-        elSaveWeekdayBtn = document.getElementById('save-weekday-btn');
-
         // イベントリスナー
         elSaveDiscordBtn.addEventListener('click', handleSaveDiscordConfig);
         elTestDiscordBtn.addEventListener('click', handleTestDiscord);
@@ -68,14 +57,6 @@
         });
 
         elResetAllBtn.addEventListener('click', handleResetAll);
-
-        elCloseModalBtn.addEventListener('click', closeWeekdayModal);
-        elCancelWeekdayBtn.addEventListener('click', closeWeekdayModal);
-        elSaveWeekdayBtn.addEventListener('click', handleSaveWeekdays);
-
-        // モーダルオーバーレイクリック
-        var overlay = elWeekdayModal.querySelector('.modal-overlay');
-        overlay.addEventListener('click', closeWeekdayModal);
 
         // 初期表示
         loadDiscordConfig();
@@ -150,58 +131,127 @@
         var li = document.createElement('li');
         li.className = 'todo-config-item';
 
+        // コンテナを作成して縦並びにする（モバイル対応）
+        var container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.width = '100%';
+        container.style.gap = '0.5rem';
+
+        // 上部：テキストと削除ボタン
+        var header = document.createElement('div');
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
+        header.style.width = '100%';
+
         // テキスト
         var text = document.createElement('div');
         text.className = 'todo-config-text';
         text.textContent = todo.text;
-        li.appendChild(text);
-
-        // 曜日表示
-        var weekdaysText = getWeekdaysText(todo.daysOfWeek);
-        var weekdays = document.createElement('div');
-        weekdays.className = 'todo-config-weekdays';
-        weekdays.textContent = weekdaysText;
-        li.appendChild(weekdays);
-
-        // アクションボタン
-        var actions = document.createElement('div');
-        actions.className = 'todo-config-actions';
-
-        // 曜日編集ボタン
-        var editBtn = document.createElement('button');
-        editBtn.className = 'icon-btn';
-        editBtn.textContent = '📅';
-        editBtn.title = '曜日設定';
-        editBtn.addEventListener('click', function () {
-            openWeekdayModal(todo, period);
-        });
-        actions.appendChild(editBtn);
+        text.style.fontWeight = 'bold';
+        text.style.fontSize = '1.1rem';
+        header.appendChild(text);
 
         // 削除ボタン
         var deleteBtn = document.createElement('button');
         deleteBtn.className = 'icon-btn delete-btn';
         deleteBtn.textContent = '🗑️';
         deleteBtn.title = '削除';
+        deleteBtn.style.fontSize = '1.2rem';
+        deleteBtn.style.padding = '0.5rem';
         deleteBtn.addEventListener('click', function () {
             handleDeleteTodo(period, todo.id);
         });
-        actions.appendChild(deleteBtn);
+        header.appendChild(deleteBtn);
 
-        li.appendChild(actions);
+        container.appendChild(header);
+
+        // 下部：曜日選択（インライン）
+        var weekdayContainer = document.createElement('div');
+        weekdayContainer.className = 'weekday-inline-selector';
+        weekdayContainer.style.display = 'flex';
+        weekdayContainer.style.gap = '0.25rem';
+        weekdayContainer.style.justifyContent = 'flex-start';
+        weekdayContainer.style.flexWrap = 'wrap';
+
+        var dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+        var currentDays = todo.daysOfWeek || [0, 1, 2, 3, 4, 5, 6]; // デフォルトは毎日
+
+        dayNames.forEach(function (dayName, index) {
+            var dayBtn = document.createElement('button');
+            dayBtn.type = 'button';
+            dayBtn.textContent = dayName;
+            dayBtn.className = 'weekday-btn';
+
+            // スタイル設定
+            dayBtn.style.width = '2.5rem';
+            dayBtn.style.height = '2.5rem';
+            dayBtn.style.borderRadius = '50%';
+            dayBtn.style.border = '2px solid var(--ink-light)';
+            dayBtn.style.background = 'transparent';
+            dayBtn.style.color = 'var(--ink-gray)';
+            dayBtn.style.fontWeight = 'bold';
+            dayBtn.style.cursor = 'pointer';
+            dayBtn.style.fontSize = '1rem';
+            dayBtn.style.transition = 'all 0.2s';
+
+            // 選択状態のスタイル
+            var isSelected = currentDays.indexOf(index) !== -1;
+            if (isSelected) {
+                dayBtn.style.background = 'var(--accent-blue)';
+                dayBtn.style.color = 'white';
+                dayBtn.style.borderColor = 'var(--accent-blue)';
+                dayBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+            }
+
+            // クリックイベント
+            dayBtn.addEventListener('click', function () {
+                toggleWeekday(todo, period, index);
+            });
+
+            weekdayContainer.appendChild(dayBtn);
+        });
+
+        container.appendChild(weekdayContainer);
+        li.appendChild(container);
 
         return li;
     }
 
-    // 曜日テキスト取得
-    function getWeekdaysText(daysOfWeek) {
-        if (!daysOfWeek || daysOfWeek.length === 0 || daysOfWeek.length === 7) {
-            return '毎日';
+    // 曜日トグル処理
+    function toggleWeekday(todo, period, dayIndex) {
+        var currentDays = todo.daysOfWeek || [0, 1, 2, 3, 4, 5, 6];
+        var newDays;
+
+        var index = currentDays.indexOf(dayIndex);
+        if (index === -1) {
+            // 追加
+            newDays = currentDays.concat([dayIndex]);
+        } else {
+            // 削除
+            newDays = currentDays.filter(function (d) { return d !== dayIndex; });
         }
-        var dayNames = ['日', '月', '火', '水', '木', '金', '土'];
-        var selectedDays = daysOfWeek.map(function (day) {
-            return dayNames[day];
+
+        // 少なくとも1日は選択されている必要がある（空の場合は全選択に戻すか、警告するか。ここでは空を許可しない）
+        if (newDays.length === 0) {
+            alert('少なくとも1つの曜日を選択してください');
+            return;
+        }
+
+        newDays.sort(function (a, b) { return a - b; });
+
+        // 更新
+        TodoManager.updateTodo(period, todo.id, {
+            daysOfWeek: newDays
         });
-        return selectedDays.join(', ');
+
+        // 再レンダリング（全体ではなく、このアイテムだけ更新するのが理想だが、簡単のためリスト全体を更新）
+        renderTodoList(period,
+            period === 'morning' ? elMorningList :
+                period === 'afterSchool' ? elAfterSchoolList :
+                    elNightList
+        );
     }
 
     // Todo追加
@@ -235,60 +285,6 @@
                         elNightList
             );
         }
-    }
-
-    // 曜日モーダルを開く
-    function openWeekdayModal(todo, period) {
-        currentEditingTodo = todo;
-        currentEditingPeriod = period;
-
-        var title = document.getElementById('modal-title');
-        title.textContent = '曜日設定: ' + todo.text;
-
-        // 現在の曜日設定をチェック
-        var checkboxes = document.querySelectorAll('.weekday-checkbox');
-        checkboxes.forEach(function (checkbox) {
-            var day = parseInt(checkbox.value);
-            checkbox.checked = todo.daysOfWeek && todo.daysOfWeek.indexOf(day) !== -1;
-        });
-
-        elWeekdayModal.classList.remove('hidden');
-    }
-
-    // 曜日モーダルを閉じる
-    function closeWeekdayModal() {
-        elWeekdayModal.classList.add('hidden');
-        currentEditingTodo = null;
-        currentEditingPeriod = null;
-    }
-
-    // 曜日設定を保存
-    function handleSaveWeekdays() {
-        if (!currentEditingTodo || !currentEditingPeriod) return;
-
-        var checkboxes = document.querySelectorAll('.weekday-checkbox:checked');
-        var selectedDays = Array.from(checkboxes).map(function (cb) {
-            return parseInt(cb.value);
-        });
-
-        // 何も選択されていない場合は全曜日
-        if (selectedDays.length === 0) {
-            selectedDays = [0, 1, 2, 3, 4, 5, 6];
-        }
-
-        selectedDays.sort(function (a, b) { return a - b; });
-
-        TodoManager.updateTodo(currentEditingPeriod, currentEditingTodo.id, {
-            daysOfWeek: selectedDays
-        });
-
-        renderTodoList(currentEditingPeriod,
-            currentEditingPeriod === 'morning' ? elMorningList :
-                currentEditingPeriod === 'afterSchool' ? elAfterSchoolList :
-                    elNightList
-        );
-
-        closeWeekdayModal();
     }
 
     // すべてのデータをリセット
