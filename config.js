@@ -5,10 +5,14 @@
     var LogManager = window.TodoApp.LogManager;
     var ConfigManager = window.TodoApp.ConfigManager;
     var DiscordNotifier = window.TodoApp.DiscordNotifier;
+    var loadTimeRanges = window.TodoApp.loadTimeRanges;
+    var saveTimeRanges = window.TodoApp.saveTimeRanges;
+    var resetTimeRanges = window.TodoApp.resetTimeRanges;
     var escapeHtml = window.TodoApp.escapeHtml;
 
     // DOM要素
     var elDiscordWebhookUrl, elDiscordUsername, elSaveDiscordBtn, elTestDiscordBtn;
+    var elTimeRangesContainer, elSaveTimeRangesBtn, elResetTimeRangesBtn;
     var elMorningList, elAfterSchoolList, elNightList;
     var elNewMorningTodo, elNewAfterSchoolTodo, elNewNightTodo;
     var elAddMorningBtn, elAddAfterSchoolBtn, elAddNightBtn;
@@ -21,6 +25,11 @@
         elDiscordUsername = document.getElementById('discord-username');
         elSaveDiscordBtn = document.getElementById('save-discord-btn');
         elTestDiscordBtn = document.getElementById('test-discord-btn');
+
+        // 時間帯設定
+        elTimeRangesContainer = document.getElementById('time-ranges-container');
+        elSaveTimeRangesBtn = document.getElementById('save-time-ranges-btn');
+        elResetTimeRangesBtn = document.getElementById('reset-time-ranges-btn');
 
         // Todo管理
         elMorningList = document.getElementById('morning-todo-list');
@@ -42,6 +51,9 @@
         elSaveDiscordBtn.addEventListener('click', handleSaveDiscordConfig);
         elTestDiscordBtn.addEventListener('click', handleTestDiscord);
 
+        elSaveTimeRangesBtn.addEventListener('click', handleSaveTimeRanges);
+        elResetTimeRangesBtn.addEventListener('click', handleResetTimeRanges);
+
         elAddMorningBtn.addEventListener('click', function () { handleAddTodo('morning'); });
         elAddAfterSchoolBtn.addEventListener('click', function () { handleAddTodo('afterSchool'); });
         elAddNightBtn.addEventListener('click', function () { handleAddTodo('night'); });
@@ -60,6 +72,7 @@
 
         // 初期表示
         loadDiscordConfig();
+        renderTimeRanges();
         renderAllTodos();
     }
 
@@ -96,6 +109,98 @@
                     alert('❌ 送信に失敗しました。Webhook URLを確認してください。');
                 }
             });
+    }
+
+    // 時間帯設定をレンダリング
+    function renderTimeRanges() {
+        var ranges = loadTimeRanges();
+        elTimeRangesContainer.innerHTML = '';
+
+        Object.keys(ranges).forEach(function (key) {
+            var range = ranges[key];
+            var div = document.createElement('div');
+            div.className = 'config-group';
+            div.style.marginBottom = '1rem';
+            div.style.padding = '1rem';
+            div.style.background = '#333';
+            div.style.borderRadius = '8px';
+
+            var title = document.createElement('h3');
+            title.style.marginBottom = '0.5rem';
+            title.style.color = 'var(--accent-blue)';
+            title.textContent = (range.emoji || '') + ' ' + range.label;
+            div.appendChild(title);
+
+            var timeContainer = document.createElement('div');
+            timeContainer.style.display = 'flex';
+            timeContainer.style.gap = '0.5rem';
+            timeContainer.style.alignItems = 'center';
+            timeContainer.style.flexWrap = 'wrap';
+
+            var startLabel = document.createElement('label');
+            startLabel.textContent = '開始: ';
+            startLabel.style.color = 'var(--ink-gray)';
+            timeContainer.appendChild(startLabel);
+
+            var startInput = document.createElement('input');
+            startInput.type = 'number';
+            startInput.min = '0';
+            startInput.max = '23';
+            startInput.value = range.start;
+            startInput.className = 'input';
+            startInput.style.width = '80px';
+            startInput.setAttribute('data-period', key);
+            startInput.setAttribute('data-field', 'start');
+            timeContainer.appendChild(startInput);
+
+            var endLabel = document.createElement('label');
+            endLabel.textContent = '終了: ';
+            endLabel.style.color = 'var(--ink-gray)';
+            endLabel.style.marginLeft = '1rem';
+            timeContainer.appendChild(endLabel);
+
+            var endInput = document.createElement('input');
+            endInput.type = 'number';
+            endInput.min = '0';
+            endInput.max = '23';
+            endInput.value = range.end;
+            endInput.className = 'input';
+            endInput.style.width = '80px';
+            endInput.setAttribute('data-period', key);
+            endInput.setAttribute('data-field', 'end');
+            timeContainer.appendChild(endInput);
+
+            div.appendChild(timeContainer);
+            elTimeRangesContainer.appendChild(div);
+        });
+    }
+
+    // 時間帯設定を保存
+    function handleSaveTimeRanges() {
+        var ranges = loadTimeRanges();
+        var inputs = elTimeRangesContainer.querySelectorAll('input');
+
+        inputs.forEach(function (input) {
+            var period = input.getAttribute('data-period');
+            var field = input.getAttribute('data-field');
+            var value = parseInt(input.value);
+
+            if (ranges[period] && !isNaN(value) && value >= 0 && value <= 23) {
+                ranges[period][field] = value;
+            }
+        });
+
+        saveTimeRanges(ranges);
+        alert('💾 時間帯設定を保存しました');
+    }
+
+    // 時間帯設定をリセット
+    function handleResetTimeRanges() {
+        if (confirm('時間帯設定をデフォルトに戻しますか？')) {
+            resetTimeRanges();
+            renderTimeRanges();
+            alert('✅ 時間帯設定をリセットしました');
+        }
     }
 
     // すべてのTodoリストをレンダリング
@@ -253,6 +358,43 @@
         });
 
         container.appendChild(weekdayContainer);
+
+        // 継続日数設定
+        var continueContainer = document.createElement('div');
+        continueContainer.style.display = 'flex';
+        continueContainer.style.gap = '0.5rem';
+        continueContainer.style.alignItems = 'center';
+        continueContainer.style.marginTop = '0.25rem';
+
+        var continueLabel = document.createElement('label');
+        continueLabel.textContent = '継続日数: ';
+        continueLabel.style.color = 'var(--ink-gray)';
+        continueLabel.style.fontSize = '0.9rem';
+        continueContainer.appendChild(continueLabel);
+
+        var continueInput = document.createElement('input');
+        continueInput.type = 'number';
+        continueInput.min = '0';
+        continueInput.max = '6';
+        continueInput.value = todo.continueDays || 0;
+        continueInput.className = 'input';
+        continueInput.style.width = '60px';
+        continueInput.addEventListener('change', function () {
+            var days = parseInt(this.value) || 0;
+            if (days < 0) days = 0;
+            if (days > 6) days = 6;
+            this.value = days;
+            TodoManager.updateTodo(period, todo.id, { continueDays: days });
+        });
+        continueContainer.appendChild(continueInput);
+
+        var continueHelp = document.createElement('span');
+        continueHelp.textContent = '日 (0=なし)';
+        continueHelp.style.color = 'var(--ink-gray)';
+        continueHelp.style.fontSize = '0.8rem';
+        continueContainer.appendChild(continueHelp);
+
+        container.appendChild(continueContainer);
         li.appendChild(container);
 
         return li;

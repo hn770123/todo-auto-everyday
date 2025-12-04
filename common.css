@@ -35,7 +35,9 @@
 }
 
 body {
-    font-family: 'Klee One', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro', 'Yu Gothic Medium', '游ゴシック Medium', 'Meiryo', 'メイリオ', serif;
+    font-family: 'Hiragino Maru Gothic ProN', 'ヒラギノ丸ゴ ProN W4', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN', sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
     background: #121212;
     color: var(--ink-black);
     min-height: 100vh;

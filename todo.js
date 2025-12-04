@@ -4,6 +4,7 @@
     var TodoManager = window.TodoApp.TodoManager;
     var LogManager = window.TodoApp.LogManager;
     var DiscordNotifier = window.TodoApp.DiscordNotifier;
+    var AudioPlayer = window.TodoApp.AudioPlayer;
     var TIME_RANGES = window.TodoApp.TIME_RANGES;
     var getCurrentPeriod = window.TodoApp.getCurrentPeriod;
     var isTodoDone = window.TodoApp.isTodoDone;
@@ -166,11 +167,13 @@
             todo.lastDone = null;
             LogManager.addLog(todo.id, todo.text, currentPeriod, 'uncheck');
             DiscordNotifier.sendTodoUncheck(todo.text, currentPeriod);
+            AudioPlayer.playUncheckSound(); // アンチェック音
         } else {
             // チェック
             todo.lastDone = now.getTime();
             LogManager.addLog(todo.id, todo.text, currentPeriod, 'check');
             DiscordNotifier.sendTodoCheck(todo.text, currentPeriod);
+            AudioPlayer.playCheckSound(); // チェック音
         }
 
         TodoManager.updateTodo(currentPeriod, todoId, { lastDone: todo.lastDone });

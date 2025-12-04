@@ -10,8 +10,6 @@
     <title>設定 - Everyday Todo</title>
     <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="config.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -25,6 +23,7 @@
             <a href="todo.html" class="nav-tab">📝 Todo</a>
             <a href="log.html" class="nav-tab">📊 ログ</a>
             <a href="config.html" class="nav-tab active">⚙️ 設定</a>
+            <a href="data.html" class="nav-tab">💾 データ</a>
         </nav>
 
         <div class="config-container">
@@ -49,6 +48,19 @@
                 <div class="config-actions">
                     <button class="btn btn-primary" id="save-discord-btn">💾 Discord設定を保存</button>
                     <button class="btn" id="test-discord-btn">🧪 テスト送信</button>
+                </div>
+            </section>
+
+            <!-- 時間帯設定 -->
+            <section class="config-section">
+                <h2 class="config-section-title">🕒 時間帯設定</h2>
+                <p class="config-help">各時間帯の開始時刻と終了時刻を設定できます</p>
+                <div id="time-ranges-container">
+                    <!-- 時間帯設定が動的に追加されます -->
+                </div>
+                <div class="config-actions">
+                    <button class="btn btn-primary" id="save-time-ranges-btn">💾 時間帯を保存</button>
+                    <button class="btn" id="reset-time-ranges-btn">🔄 デフォルトに戻す</button>
                 </div>
             </section>
 

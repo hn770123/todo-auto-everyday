@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>データ管理 - Everyday Todo</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="config.css">
+</head>
+
+<body>
+    <div class="paper-container">
+        <header class="header">
+            <h1>💾 データ管理</h1>
+            <p class="subtitle">エクスポート・インポート</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <a href="todo.html" class="nav-tab">📝 Todo</a>
+            <a href="log.html" class="nav-tab">📊 ログ</a>
+            <a href="config.html" class="nav-tab">⚙️ 設定</a>
+            <a href="data.html" class="nav-tab active">💾 データ</a>
+        </nav>
+
+        <div class="config-container">
+            <!-- エクスポート -->
+            <section class="config-section">
+                <h2 class="config-section-title">📤 エクスポート</h2>
+                <p class="config-help">すべてのデータをJSON形式でエクスポートします</p>
+                <div class="config-actions">
+                    <button class="btn btn-primary" id="export-btn">📥 JSONをダウンロード</button>
+                    <button class="btn" id="copy-json-btn">📋 JSONをコピー</button>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <textarea id="export-textarea" class="input" rows="10" readonly
+                        style="font-family: monospace; font-size: 0.9rem;"></textarea>
+                </div>
+            </section>
+
+            <!-- インポート -->
+            <section class="config-section">
+                <h2 class="config-section-title">📥 インポート</h2>
+                <p class="config-help">JSON形式のデータをインポートします</p>
+                <p class="config-warning">
+                    ⚠️ インポートすると、現在のデータは上書きされます
+                </p>
+                <div style="margin-top: 1rem;">
+                    <textarea id="import-textarea" class="input" rows="10"
+                        placeholder='{"todos": {...}, "logs": [...], ...}'
+                        style="font-family: monospace; font-size: 0.9rem;"></textarea>
+                </div>
+                <div class="config-actions" style="margin-top: 1rem;">
+                    <button class="btn btn-success" id="import-btn">📤 インポート実行</button>
+                    <button class="btn" id="validate-btn">✅ 検証のみ</button>
+                </div>
+            </section>
+
+            <!-- ファイルからインポート -->
+            <section class="config-section">
+                <h2 class="config-section-title">📁 ファイルからインポート</h2>
+                <p class="config-help">JSONファイルを選択してインポートします</p>
+                <div class="config-actions">
+                    <input type="file" id="file-input" accept=".json" style="display: none;">
+                    <button class="btn" id="select-file-btn">📂 ファイルを選択</button>
+                </div>
+            </section>
+
+            <!-- 戻る -->
+            <section class="config-section">
+                <div class="config-actions">
+                    <a href="config.html" class="btn">← 設定に戻る</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="polyfills.js"></script>
+    <script src="utils.js"></script>
+    <script src="data.js"></script>
+</body>
+
+</html>

@@ -109,4 +109,12 @@
         console.log('既に初期化済みです');
     }
 
+    // 期限切れの単発Todoを自動削除
+    if (window.TodoApp && window.TodoApp.OneTimeTodoManager) {
+        var deletedCount = window.TodoApp.OneTimeTodoManager.cleanupExpired();
+        if (deletedCount > 0) {
+            console.log('期限切れのTodoを' + deletedCount + '件削除しました');
+        }
+    }
+
 })();
