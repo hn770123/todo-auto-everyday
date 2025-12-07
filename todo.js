@@ -9,6 +9,7 @@
     var getCurrentPeriod = window.TodoApp.getCurrentPeriod;
     var isTodoDone = window.TodoApp.isTodoDone;
     var shouldShowToday = window.TodoApp.shouldShowToday;
+    var shouldShowNow = window.TodoApp.shouldShowNow;
     var escapeHtml = window.TodoApp.escapeHtml;
 
     // DOM要素
@@ -52,6 +53,13 @@
         if (newPeriod !== currentPeriod) {
             currentPeriod = newPeriod;
             updatePeriodDisplay();
+        }
+
+        // 時間が変わったらTodoリストを再レンダリング
+        // (各Todoのカスタム時間帯設定に基づいて表示/非表示が切り替わる)
+        var currentHour = now.getHours();
+        if (!updateClock.lastHour || updateClock.lastHour !== currentHour) {
+            updateClock.lastHour = currentHour;
             renderTodos();
         }
     }
@@ -66,19 +74,29 @@
 
     // Todo一覧レンダリング
     function renderTodos() {
-        var todos = TodoManager.getTodos(currentPeriod);
         var now = new Date();
+        var allTodos = [];
+
+        // 全てのperiodからTodoを取得
+        Object.keys(TIME_RANGES).forEach(function (period) {
+            var periodTodos = TodoManager.getTodos(period);
+            periodTodos.forEach(function (todo) {
+                // periodを保持
+                todo._period = period;
+                allTodos.push(todo);
+            });
+        });
 
         // order順にソート
-        todos.sort(function (a, b) {
+        allTodos.sort(function (a, b) {
             var orderA = a.order !== undefined ? a.order : 999;
             var orderB = b.order !== undefined ? b.order : 999;
             return orderA - orderB;
         });
 
-        // 曜日フィルタリング
-        var visibleTodos = todos.filter(function (todo) {
-            return shouldShowToday(todo);
+        // 曜日と時間帯でフィルタリング
+        var visibleTodos = allTodos.filter(function (todo) {
+            return shouldShowToday(todo) && shouldShowNow(todo, now);
         });
 
         // 完了状態で分類
@@ -86,7 +104,7 @@
         var checkedTodos = [];
 
         visibleTodos.forEach(function (todo) {
-            if (isTodoDone(todo, currentPeriod, now)) {
+            if (isTodoDone(todo, todo._period, now)) {
                 checkedTodos.push(todo);
             } else {
                 uncheckedTodos.push(todo);
@@ -154,29 +172,39 @@
 
     // Todo完了状態トグル
     function toggleTodo(todoId) {
-        var todos = TodoManager.getTodos(currentPeriod);
-        var todo = todos.find(function (t) { return t.id === todoId; });
+        // 全てのperiodからTodoを検索
+        var foundTodo = null;
+        var foundPeriod = null;
 
-        if (!todo) return;
+        Object.keys(TIME_RANGES).forEach(function (period) {
+            var todos = TodoManager.getTodos(period);
+            var todo = todos.find(function (t) { return t.id === todoId; });
+            if (todo) {
+                foundTodo = todo;
+                foundPeriod = period;
+            }
+        });
+
+        if (!foundTodo) return;
 
         var now = new Date();
-        var wasDone = isTodoDone(todo, currentPeriod, now);
+        var wasDone = isTodoDone(foundTodo, foundPeriod, now);
 
         if (wasDone) {
             // チェック解除
-            todo.lastDone = null;
-            LogManager.addLog(todo.id, todo.text, currentPeriod, 'uncheck');
-            DiscordNotifier.sendTodoUncheck(todo.text, currentPeriod);
+            foundTodo.lastDone = null;
+            LogManager.addLog(foundTodo.id, foundTodo.text, foundPeriod, 'uncheck');
+            DiscordNotifier.sendTodoUncheck(foundTodo.text, foundPeriod);
             AudioPlayer.playUncheckSound(); // アンチェック音
         } else {
             // チェック
-            todo.lastDone = now.getTime();
-            LogManager.addLog(todo.id, todo.text, currentPeriod, 'check');
-            DiscordNotifier.sendTodoCheck(todo.text, currentPeriod);
+            foundTodo.lastDone = now.getTime();
+            LogManager.addLog(foundTodo.id, foundTodo.text, foundPeriod, 'check');
+            DiscordNotifier.sendTodoCheck(foundTodo.text, foundPeriod);
             AudioPlayer.playCheckSound(); // チェック音
         }
 
-        TodoManager.updateTodo(currentPeriod, todoId, { lastDone: todo.lastDone });
+        TodoManager.updateTodo(foundPeriod, todoId, { lastDone: foundTodo.lastDone });
         renderTodos();
     }
 
@@ -229,7 +257,32 @@
 
     // Todo並び替え
     function reorderTodos(draggedId, targetId) {
-        var todos = TodoManager.getTodos(currentPeriod);
+        // 全てのperiodからTodoを検索
+        var draggedTodo = null;
+        var draggedPeriod = null;
+        var targetTodo = null;
+        var targetPeriod = null;
+
+        Object.keys(TIME_RANGES).forEach(function (period) {
+            var todos = TodoManager.getTodos(period);
+            todos.forEach(function (todo) {
+                if (todo.id === draggedId) {
+                    draggedTodo = todo;
+                    draggedPeriod = period;
+                }
+                if (todo.id === targetId) {
+                    targetTodo = todo;
+                    targetPeriod = period;
+                }
+            });
+        });
+
+        if (!draggedTodo || !targetTodo) return;
+
+        // 同じperiod内でのみ並び替えを許可
+        if (draggedPeriod !== targetPeriod) return;
+
+        var todos = TodoManager.getTodos(draggedPeriod);
         var draggedIndex = todos.findIndex(function (t) { return t.id === draggedId; });
         var targetIndex = todos.findIndex(function (t) { return t.id === targetId; });
 
@@ -244,7 +297,7 @@
             todo.order = index;
         });
 
-        TodoManager.reorderTodos(currentPeriod, todos);
+        TodoManager.reorderTodos(draggedPeriod, todos);
         renderTodos();
     }
 

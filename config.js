@@ -395,7 +395,76 @@
         continueContainer.appendChild(continueHelp);
 
         container.appendChild(continueContainer);
+
+        // 時間帯設定
+        var timeRangeContainer = document.createElement('div');
+        timeRangeContainer.style.display = 'flex';
+        timeRangeContainer.style.gap = '0.5rem';
+        timeRangeContainer.style.alignItems = 'center';
+        timeRangeContainer.style.marginTop = '0.25rem';
+        timeRangeContainer.style.flexWrap = 'wrap';
+
+        var timeRangeLabel = document.createElement('label');
+        timeRangeLabel.textContent = '表示時間帯: ';
+        timeRangeLabel.style.color = 'var(--ink-gray)';
+        timeRangeLabel.style.fontSize = '0.9rem';
+        timeRangeContainer.appendChild(timeRangeLabel);
+
+        // 開始時刻
+        var startTimeInput = document.createElement('input');
+        startTimeInput.type = 'number';
+        startTimeInput.min = '0';
+        startTimeInput.max = '23';
+        startTimeInput.value = (todo.customTimeRange && todo.customTimeRange.start !== undefined) ? todo.customTimeRange.start : 0;
+        startTimeInput.className = 'input';
+        startTimeInput.style.width = '60px';
+        startTimeInput.addEventListener('change', function () {
+            var start = parseInt(this.value) || 0;
+            if (start < 0) start = 0;
+            if (start > 23) start = 23;
+            this.value = start;
+            var currentRange = todo.customTimeRange || { start: 0, end: 23 };
+            TodoManager.updateTodo(period, todo.id, {
+                customTimeRange: { start: start, end: currentRange.end }
+            });
+        });
+        timeRangeContainer.appendChild(startTimeInput);
+
+        var timeSeparator = document.createElement('span');
+        timeSeparator.textContent = '時 〜 ';
+        timeSeparator.style.color = 'var(--ink-gray)';
+        timeSeparator.style.fontSize = '0.9rem';
+        timeRangeContainer.appendChild(timeSeparator);
+
+        // 終了時刻
+        var endTimeInput = document.createElement('input');
+        endTimeInput.type = 'number';
+        endTimeInput.min = '0';
+        endTimeInput.max = '23';
+        endTimeInput.value = (todo.customTimeRange && todo.customTimeRange.end !== undefined) ? todo.customTimeRange.end : 23;
+        endTimeInput.className = 'input';
+        endTimeInput.style.width = '60px';
+        endTimeInput.addEventListener('change', function () {
+            var end = parseInt(this.value) || 23;
+            if (end < 0) end = 0;
+            if (end > 23) end = 23;
+            this.value = end;
+            var currentRange = todo.customTimeRange || { start: 0, end: 23 };
+            TodoManager.updateTodo(period, todo.id, {
+                customTimeRange: { start: currentRange.start, end: end }
+            });
+        });
+        timeRangeContainer.appendChild(endTimeInput);
+
+        var timeEndLabel = document.createElement('span');
+        timeEndLabel.textContent = '時';
+        timeEndLabel.style.color = 'var(--ink-gray)';
+        timeEndLabel.style.fontSize = '0.9rem';
+        timeRangeContainer.appendChild(timeEndLabel);
+
+        container.appendChild(timeRangeContainer);
         li.appendChild(container);
+
 
         return li;
     }

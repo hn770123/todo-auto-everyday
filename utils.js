@@ -92,13 +92,19 @@
         },
         addTodo: function (period, text, continueDays) {
             var data = this.load();
+            var ranges = loadTimeRanges();
+            var defaultRange = ranges[period] || { start: 0, end: 23 };
             var newTodo = {
                 id: Date.now(),
                 text: text,
                 lastDone: null,
                 order: data[period] ? data[period].length : 0,
                 daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // すべての曜日で表示
-                continueDays: continueDays || 0 // 継続日数（0=継続なし）
+                continueDays: continueDays || 0, // 継続日数(0=継続なし)
+                customTimeRange: { // Todo毎の時間帯設定
+                    start: defaultRange.start,
+                    end: defaultRange.end
+                }
             };
             if (!data[period]) data[period] = [];
             data[period].push(newTodo);
@@ -129,7 +135,27 @@
         },
         getTodos: function (period) {
             var data = this.load();
-            return data[period] || [];
+            var todos = data[period] || [];
+            var ranges = loadTimeRanges();
+            var defaultRange = ranges[period] || { start: 0, end: 23 };
+            var needsSave = false;
+
+            // マイグレーション: customTimeRangeがないTodoに追加
+            todos.forEach(function (todo) {
+                if (!todo.customTimeRange) {
+                    todo.customTimeRange = {
+                        start: defaultRange.start,
+                        end: defaultRange.end
+                    };
+                    needsSave = true;
+                }
+            });
+
+            if (needsSave) {
+                this.save(data);
+            }
+
+            return todos;
         }
     };
 
@@ -310,7 +336,7 @@
         return todo.lastDone >= windowRange.start && todo.lastDone < windowRange.end;
     }
 
-    // Todoが今日表示すべきか判定（曜日設定に基づく）
+    // Todoが今日表示すべきか判定(曜日設定に基づく)
     function shouldShowToday(todo) {
         if (!todo.daysOfWeek || todo.daysOfWeek.length === 0) {
             return true; // 曜日設定がない場合は常に表示
@@ -318,6 +344,29 @@
         var today = new Date().getDay();
         return todo.daysOfWeek.indexOf(today) !== -1;
     }
+
+    // Todoが現在の時刻に表示されるべきか判定(カスタム時間帯設定に基づく)
+    function shouldShowNow(todo, now) {
+        now = now || new Date();
+        var hour = now.getHours();
+
+        // customTimeRangeがない場合は常に表示
+        if (!todo.customTimeRange) {
+            return true;
+        }
+
+        var start = todo.customTimeRange.start;
+        var end = todo.customTimeRange.end;
+
+        if (end > start) {
+            // 通常の範囲(例: 4-12)
+            return hour >= start && hour < end;
+        } else {
+            // 日をまたぐ範囲(例: 19-4)
+            return hour >= start || hour < end;
+        }
+    }
+
 
     // HTML エスケープ
     function escapeHtml(text) {
@@ -484,6 +533,7 @@
         getWindowRange: getWindowRange,
         isTodoDone: isTodoDone,
         shouldShowToday: shouldShowToday,
+        shouldShowNow: shouldShowNow,
         escapeHtml: escapeHtml,
         formatDateTime: formatDateTime
     };
